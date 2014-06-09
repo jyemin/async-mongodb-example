@@ -10,10 +10,9 @@ import static java.util.Arrays.asList;
 
 public class PopulateCocktails {
     public static void main(String[] args) {
-        MongoClient clients = MongoClients.create(new ServerAddress());
 
-        try {
-            MongoCollection<Document> collection = clients.getDatabase("cookbook").getCollection("cocktails");
+        try (MongoClient client = MongoClients.create(new ServerAddress())) {
+            MongoCollection<Document> collection = client.getDatabase("cookbook").getCollection("cocktails");
             collection.tools().drop();
 
             collection.insert(new Document("_id", 1)
@@ -30,33 +29,31 @@ public class PopulateCocktails {
 
             collection.insert(new Document("_id", 4)
                               .append("name", "Mint Julep")
-                              .append("ingredients", asList("", "", "")));
+                              .append("ingredients", asList("Simple syrup", "Bourbon", "Mint")));
 
             collection.insert(new Document("_id", 5)
                               .append("name", "Daiquiri")
-                              .append("ingredients", asList("", "", "")));
+                              .append("ingredients", asList("Lime", "Sugar", "Rum")));
 
             collection.insert(new Document("_id", 6)
                               .append("name", "Sangria")
-                              .append("ingredients", asList("", "", "")));
+                              .append("ingredients", asList("Brandy", "Triple Sec", "Orange Juice", "Red wine", "Club soda")));
 
             collection.insert(new Document("_id", 7)
                               .append("name", "Michelada")
-                              .append("ingredients", asList("", "", "")));
+                              .append("ingredients", asList("Lemon", "Soy Sauce", "Clamato", "Beer")));
 
             collection.insert(new Document("_id", 8)
                               .append("name", "Martini")
-                              .append("ingredients", asList("", "", "")));
+                              .append("ingredients", asList("Vodka", "Olives")));
 
             collection.insert(new Document("_id", 9)
                               .append("name", "Manhattan")
-                              .append("ingredients", asList("", "", "")));
+                              .append("ingredients", asList("Rye Whisky", "Sweet Vermouth", "Angostura bitters")));
 
             collection.insert(new Document("_id", 10)
                               .append("name", "Pimm's Cup")
-                              .append("ingredients", asList("", "", "")));
-        } finally {
-            clients.close();
+                              .append("ingredients", asList("English cucumber wheel", "Lemon wheel", "Pimm's No. 1", "Ginger ale")));
         }
     }
 }
