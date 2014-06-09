@@ -13,7 +13,7 @@ import view.async.AsyncCocktailPage;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
-public class RxJavaBasedDisplayCocktail {
+public class RxJavaBasedCocktailDisplay {
 
     static MongoClient client;
     static MongoCollection<Document> collection;
@@ -25,7 +25,7 @@ public class RxJavaBasedDisplayCocktail {
 
         String name = "Pomegranate Margarita";
 
-        final AsyncCocktailPage page = new AsyncCocktailPage();
+        final AsyncCocktailPage page = new AsyncCocktailPage(System.out);
 
         Observable<Document> cocktailObservable = collection.find(new Document("name", name)).one();
 

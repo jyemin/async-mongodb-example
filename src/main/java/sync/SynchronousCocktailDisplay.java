@@ -10,7 +10,7 @@ import view.CocktailPage;
 
 import java.net.UnknownHostException;
 
-public class SynchronousDisplayCocktail {
+public class SynchronousCocktailDisplay {
 
     static MongoClient client;
     static MongoCollection<Document> collection;
@@ -21,7 +21,7 @@ public class SynchronousDisplayCocktail {
 
         String name = "Pomegranate Margarita";
 
-        CocktailPage page = new CocktailPage();
+        CocktailPage page = new CocktailPage(System.out);
 
         try {
             Document cocktail = collection.find(new Document("name", name)).getOne();

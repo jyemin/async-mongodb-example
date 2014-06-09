@@ -2,10 +2,18 @@ package view;
 
 import org.mongodb.Document;
 
+import java.io.PrintStream;
+
 public class CocktailPage {
+    private final PrintStream printStream;
+    
     private Document cocktail;
     private Document previousCocktail;
     private Document nextCocktail;
+
+    public CocktailPage(final PrintStream printStream) {
+        this.printStream = printStream;
+    }
 
     public Document getCocktail() {
         return cocktail;
@@ -32,19 +40,19 @@ public class CocktailPage {
     }
 
     public void display() {
-        System.out.println();
-        System.out.println("Featured cocktail: " + cocktail);
-        System.out.println();
-        System.out.println("Previous: " + previousCocktail);
-        System.out.println("Next:     " + nextCocktail);
-        System.out.println();
-        System.out.flush();
+        printStream.println();
+        printStream.println("Featured cocktail: " + cocktail);
+        printStream.println();
+        printStream.println("Previous: " + previousCocktail);
+        printStream.println("Next:     " + nextCocktail);
+        printStream.println();
+        printStream.flush();
     }
 
     public void displayError(final Throwable e) {
-        System.out.println();
-        System.out.println(e.getMessage());
-        System.out.println();
-        System.out.flush();
+        printStream.println();
+        printStream.println(e.getMessage());
+        printStream.println();
+        printStream.flush();
     }
 }

@@ -12,7 +12,7 @@ import view.async.AsyncCocktailPage;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
-public class CallbackBasedDisplayCocktail {
+public class CallbackBasedCocktailDisplay {
 
     static MongoClient client;
     static MongoCollection<Document> collection;
@@ -23,7 +23,7 @@ public class CallbackBasedDisplayCocktail {
 
         String name = "Pomegranate Margarita";
 
-        AsyncCocktailPage page = new AsyncCocktailPage();
+        AsyncCocktailPage page = new AsyncCocktailPage(System.out);
 
         MongoFuture<Document> cocktailFuture = collection.find(new Document("name", name)).one();
 

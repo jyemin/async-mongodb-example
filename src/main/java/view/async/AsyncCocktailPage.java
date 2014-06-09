@@ -3,12 +3,17 @@ package view.async;
 import org.mongodb.Document;
 import view.CocktailPage;
 
+import java.io.PrintStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class AsyncCocktailPage extends CocktailPage {
 
     private CountDownLatch latch = new CountDownLatch(1);
+
+    public AsyncCocktailPage(final PrintStream printStream) {
+        super(printStream);
+    }
 
     public synchronized void setPreviousCocktail(final Document previousCocktail) {
         super.setPreviousCocktail(previousCocktail);
