@@ -9,21 +9,37 @@ import org.mongodb.async.MongoClients;
 import org.mongodb.async.MongoCollection;
 import view.async.AsyncCocktailPage;
 
+import java.io.PrintStream;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 public class CallbackBasedCocktailDisplay {
 
-    static MongoClient client;
-    static MongoCollection<Document> collection;
+    private final MongoClient client;
+    private final MongoCollection<Document> collection;
 
-    public static void main(String[] args) throws UnknownHostException, InterruptedException {
+    public CallbackBasedCocktailDisplay() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
         collection = client.getDatabase("cookbook").getCollection("cocktails");
+    }
 
-        String name = "Pomegranate Margarita";
 
-        AsyncCocktailPage page = new AsyncCocktailPage(System.out);
+    private MongoFuture<Document> getNext(final int cocktailId) {
+        return collection.find(new Document("_id", new Document("$gt", cocktailId)))
+                         .sort(new Document("_id", 1))
+                         .fields(new Document("name", 1))
+                         .one();
+    }
+
+    private MongoFuture<Document> getPrevious(final int cocktailId) {
+        return collection.find(new Document("_id", new Document("$lt", cocktailId)))
+                         .sort(new Document("_id", -1))
+                         .fields(new Document("name", 1))
+                         .one();
+    }
+
+    public void display(final String name, final PrintStream printStream) throws InterruptedException {
+        AsyncCocktailPage page = new AsyncCocktailPage(printStream);
 
         MongoFuture<Document> cocktailFuture = collection.find(new Document("name", name)).one();
 
@@ -58,18 +74,10 @@ public class CallbackBasedCocktailDisplay {
         }
     }
 
-    private static MongoFuture<Document> getNext(final int cocktailId) {
-        return collection.find(new Document("_id", new Document("$gt", cocktailId)))
-                         .sort(new Document("_id", 1))
-                         .fields(new Document("name", 1))
-                         .one();
-    }
+    public static void main(String[] args) throws UnknownHostException, InterruptedException {
+        String name = "Pomegranate Margarita";
+        PrintStream printStream = System.out;
 
-    private static MongoFuture<Document> getPrevious(final int cocktailId) {
-        return collection.find(new Document("_id", new Document("$lt", cocktailId)))
-                         .sort(new Document("_id", -1))
-                         .fields(new Document("name", 1))
-                         .one();
+        new CallbackBasedCocktailDisplay().display(name, printStream);
     }
-
 }

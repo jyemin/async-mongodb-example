@@ -10,22 +10,22 @@ import rx.Observable;
 import rx.Subscriber;
 import view.async.AsyncCocktailPage;
 
+import java.io.PrintStream;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 public class RxJavaBasedCocktailDisplay {
 
-    static MongoClient client;
-    static MongoCollection<Document> collection;
+    private final MongoClient client;
+    private final MongoCollection<Document> collection;
 
-
-    public static void main(String[] args) throws UnknownHostException, InterruptedException {
+    public RxJavaBasedCocktailDisplay() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
         collection = client.getDatabase("cookbook").getCollection("cocktails");
+    }
 
-        String name = "Pomegranate Margarita";
-
-        final AsyncCocktailPage page = new AsyncCocktailPage(System.out);
+    public void display(final String name, final PrintStream printStream) throws InterruptedException {
+        final AsyncCocktailPage page = new AsyncCocktailPage(printStream);
 
         Observable<Document> cocktailObservable = collection.find(new Document("name", name)).one();
 
@@ -67,14 +67,14 @@ public class RxJavaBasedCocktailDisplay {
         }
     }
 
-    private static Observable<Document> getNext(final int cocktailId) {
+    private Observable<Document> getNext(final int cocktailId) {
         return collection.find(new Document("_id", new Document("$gt", cocktailId)))
                          .sort(new Document("_id", 1))
                          .fields(new Document("name", 1))
                          .one();
     }
 
-    private static Observable<Document> getPrevious(final int cocktailId) {
+    private Observable<Document> getPrevious(final int cocktailId) {
         return collection.find(new Document("_id", new Document("$lt", cocktailId)))
                          .sort(new Document("_id", -1))
                          .fields(new Document("name", 1))
@@ -96,5 +96,12 @@ public class RxJavaBasedCocktailDisplay {
         public void onError(final Throwable e) {
             page.displayError(e);
         }
+    }
+
+    public static void main(String[] args) throws UnknownHostException, InterruptedException {
+        String name = "Pomegranate Margarita";
+        PrintStream printStream = System.out;
+
+        new RxJavaBasedCocktailDisplay().display(name, printStream);
     }
 }
