@@ -7,6 +7,9 @@ import java.io.PrintStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A cocktail display page that can handle asynchronous events for its data.  It will display the page when all of its data is available.
+ */
 public class AsyncCocktailPage extends CocktailPage {
 
     private CountDownLatch latch = new CountDownLatch(1);

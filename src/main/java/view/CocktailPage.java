@@ -4,6 +4,9 @@ import org.mongodb.Document;
 
 import java.io.PrintStream;
 
+/**
+ * A sort of cocktail display page.
+ */
 public class CocktailPage {
     private final PrintStream printStream;
     
