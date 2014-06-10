@@ -42,6 +42,8 @@ public class AsyncCocktailPage extends CocktailPage {
     }
 
     public void await(final long timeout, TimeUnit timeUnit) throws InterruptedException {
-        latch.await(timeout, timeUnit);
+        if (!latch.await(timeout, timeUnit)) {
+            throw new InterruptedException("Timed out waiting for page to display");
+        }
     }
 }

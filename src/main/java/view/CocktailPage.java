@@ -44,17 +44,25 @@ public class CocktailPage {
 
     public void display() {
         printStream.println();
+        printStream.println("************************************************************************************************************");
+        printStream.println();
         printStream.println("Featured cocktail: " + cocktail);
         printStream.println();
         printStream.println("Previous: " + previousCocktail);
         printStream.println("Next:     " + nextCocktail);
+        printStream.println();
+        printStream.println("************************************************************************************************************");
         printStream.println();
         printStream.flush();
     }
 
     public void displayError(final Throwable e) {
         printStream.println();
-        printStream.println(e.getMessage());
+        printStream.println("************************************************************************************************************");
+        printStream.println();
+        printStream.println("Error message: " + e.getMessage());
+        printStream.println();
+        printStream.println("************************************************************************************************************");
         printStream.println();
         printStream.flush();
     }

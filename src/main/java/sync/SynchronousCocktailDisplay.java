@@ -11,6 +11,9 @@ import view.CocktailPage;
 import java.io.PrintStream;
 import java.net.UnknownHostException;
 
+/**
+ * Display a cocktail using synchronous MongoDB database calls.
+ */
 public class SynchronousCocktailDisplay {
 
     private final MongoClient client;
@@ -18,7 +21,7 @@ public class SynchronousCocktailDisplay {
 
     public SynchronousCocktailDisplay() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
-        collection = client.getDatabase("cookbook").getCollection("cocktails");
+        collection = client.getDatabase("top_ten").getCollection("cocktails");
     }
 
     public void display(final String name, final PrintStream out) {
@@ -31,8 +34,11 @@ public class SynchronousCocktailDisplay {
 
             int cocktailId = cocktail.getInteger("_id");
 
-            page.setPreviousCocktail(getPrevious(cocktailId));
-            page.setNextCocktail(getNext(cocktailId));
+            Document previousCocktail = getPrevious(cocktailId);
+            Document nextCocktail = getNext(cocktailId);
+
+            page.setPreviousCocktail(previousCocktail);
+            page.setNextCocktail(nextCocktail);
 
             page.display();
 
@@ -58,7 +64,7 @@ public class SynchronousCocktailDisplay {
     }
 
     public static void main(String[] args) throws UnknownHostException {
-        String name = "Pomegranate Margarita";
+        String name = "Margarita";
         PrintStream printStream = System.out;
 
         new SynchronousCocktailDisplay().display(name, printStream);

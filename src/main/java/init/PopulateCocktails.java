@@ -12,7 +12,7 @@ public class PopulateCocktails {
     public static void main(String[] args) {
 
         try (MongoClient client = MongoClients.create(new ServerAddress())) {
-            MongoCollection<Document> collection = client.getDatabase("cookbook").getCollection("cocktails");
+            MongoCollection<Document> collection = client.getDatabase("top_ten").getCollection("cocktails");
             collection.tools().drop();
 
             collection.insert(new Document("_id", 1)
@@ -20,8 +20,8 @@ public class PopulateCocktails {
                               .append("ingredients", asList("Rum", "Watermelon", "Mint")));
 
             collection.insert(new Document("_id", 2)
-                              .append("name", "Pomegranate Margarita")
-                              .append("ingredients", asList("Tequila", "Orange Cointreau", "Lime")));
+                              .append("name", "Margarita")
+                              .append("ingredients", asList("Tequila", "Cointreau", "Lime")));
 
             collection.insert(new Document("_id", 3)
                               .append("name", "Gin and Tonic")

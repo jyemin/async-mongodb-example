@@ -14,6 +14,9 @@ import java.io.PrintStream;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Display a cocktail using synchronous MongoDB database calls wrapped in RxJava Observable.
+ */
 public class RxJavaBasedCocktailDisplay {
 
     private final MongoClient client;
@@ -21,7 +24,7 @@ public class RxJavaBasedCocktailDisplay {
 
     public RxJavaBasedCocktailDisplay() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
-        collection = client.getDatabase("cookbook").getCollection("cocktails");
+        collection = client.getDatabase("top_ten").getCollection("cocktails");
     }
 
     public void display(final String name, final PrintStream printStream) throws InterruptedException {
@@ -99,7 +102,7 @@ public class RxJavaBasedCocktailDisplay {
     }
 
     public static void main(String[] args) throws UnknownHostException, InterruptedException {
-        String name = "Pomegranate Margarita";
+        String name = "Margarita";
         PrintStream printStream = System.out;
 
         new RxJavaBasedCocktailDisplay().display(name, printStream);
