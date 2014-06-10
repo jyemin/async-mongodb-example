@@ -1,4 +1,4 @@
-package view;
+package cocktails.view;
 
 import org.mongodb.Document;
 

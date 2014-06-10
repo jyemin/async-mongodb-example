@@ -1,13 +1,12 @@
-package sync;
+package cocktails.controller;
 
-import init.Cocktails;
+import cocktails.view.CocktailPage;
 import org.mongodb.Document;
 import org.mongodb.MongoClient;
 import org.mongodb.MongoClientOptions;
 import org.mongodb.MongoClientURI;
 import org.mongodb.MongoClients;
 import org.mongodb.MongoCollection;
-import view.CocktailPage;
 
 import java.io.PrintStream;
 import java.net.UnknownHostException;
@@ -15,15 +14,18 @@ import java.net.UnknownHostException;
 /**
  * Display a cocktail using synchronous MongoDB database calls.
  */
-public class SynchronousCocktailDisplay {
+public class SynchronousCocktailController {
 
     private final MongoClient client;
     private final MongoCollection<Document> collection;
 
-    public SynchronousCocktailDisplay() throws UnknownHostException {
+    public SynchronousCocktailController() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
         collection = client.getDatabase("top_ten").getCollection("cocktails");
-        Cocktails.populate("top_ten", collection.getName());
+
+        // Insert sample data into collection
+        collection.tools().drop();
+        collection.insert(CocktailData.getSampleData());
     }
 
     public void display(final String name, final PrintStream out) {
@@ -69,6 +71,6 @@ public class SynchronousCocktailDisplay {
         String name = "Margarita";
         PrintStream printStream = System.out;
 
-        new SynchronousCocktailDisplay().display(name, printStream);
+        new SynchronousCocktailController().display(name, printStream);
    }
 }

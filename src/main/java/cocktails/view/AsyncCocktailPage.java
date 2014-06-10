@@ -1,7 +1,6 @@
-package view.async;
+package cocktails.view;
 
 import org.mongodb.Document;
-import view.CocktailPage;
 
 import java.io.PrintStream;
 import java.util.concurrent.CountDownLatch;

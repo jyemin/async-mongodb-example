@@ -1,6 +1,6 @@
-package pipeline;
+package cocktails.controller;
 
-import init.Cocktails;
+import cocktails.view.AsyncCocktailPage;
 import org.mongodb.Document;
 import org.mongodb.MongoClientOptions;
 import org.mongodb.MongoClientURI;
@@ -9,7 +9,6 @@ import org.mongodb.async.rxjava.MongoClients;
 import org.mongodb.async.rxjava.MongoCollection;
 import rx.Observable;
 import rx.Subscriber;
-import view.async.AsyncCocktailPage;
 
 import java.io.PrintStream;
 import java.net.UnknownHostException;
@@ -18,15 +17,18 @@ import java.util.concurrent.TimeUnit;
 /**
  * Display a cocktail using synchronous MongoDB database calls wrapped in RxJava Observable.
  */
-public class RxJavaBasedCocktailDisplay {
+public class RxJavaBasedCocktailController {
 
     private final MongoClient client;
     private final MongoCollection<Document> collection;
 
-    public RxJavaBasedCocktailDisplay() throws UnknownHostException {
+    public RxJavaBasedCocktailController() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
         collection = client.getDatabase("top_ten").getCollection("cocktails");
-        Cocktails.populate("top_ten", collection.getName());
+
+        // Insert sample data into collection
+        collection.tools().drop().toBlockingObservable().single();
+        collection.insert(CocktailData.getSampleData()).toBlockingObservable().single();
     }
 
     public void display(final String name, final PrintStream printStream) throws InterruptedException {
@@ -107,6 +109,6 @@ public class RxJavaBasedCocktailDisplay {
         String name = "Margarita";
         PrintStream printStream = System.out;
 
-        new RxJavaBasedCocktailDisplay().display(name, printStream);
+        new RxJavaBasedCocktailController().display(name, printStream);
     }
 }

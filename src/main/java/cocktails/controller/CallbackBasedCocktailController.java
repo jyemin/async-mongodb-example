@@ -1,6 +1,6 @@
-package callback;
+package cocktails.controller;
 
-import init.Cocktails;
+import cocktails.view.AsyncCocktailPage;
 import org.mongodb.Document;
 import org.mongodb.MongoClientOptions;
 import org.mongodb.MongoClientURI;
@@ -8,24 +8,33 @@ import org.mongodb.MongoFuture;
 import org.mongodb.async.MongoClient;
 import org.mongodb.async.MongoClients;
 import org.mongodb.async.MongoCollection;
-import view.async.AsyncCocktailPage;
 
 import java.io.PrintStream;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Display a cocktail using asynchronous MongoDB database calls.
+ * Display a cocktail using asynchronous MongoDB database calls with registered callbacks.
  */
-public class CallbackBasedCocktailDisplay {
+public class CallbackBasedCocktailController {
 
     private final MongoClient client;
     private final MongoCollection<Document> collection;
 
-    public CallbackBasedCocktailDisplay() throws UnknownHostException {
+    public static void main(String[] args) throws UnknownHostException, InterruptedException {
+        String name = "Margarita";
+        PrintStream printStream = System.out;
+
+        new CallbackBasedCocktailController().display(name, printStream);
+    }
+
+    public CallbackBasedCocktailController() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
         collection = client.getDatabase("top_ten").getCollection("cocktails");
-        Cocktails.populate("top_ten", collection.getName());
+
+        // Insert sample data into collection
+        collection.tools().drop().get();
+        collection.insert(CocktailData.getSampleData()).get();  // Do it synchronously
     }
 
     public void display(final String name, final PrintStream printStream) throws InterruptedException {
@@ -77,12 +86,5 @@ public class CallbackBasedCocktailDisplay {
                          .sort(new Document("_id", -1))
                          .fields(new Document("name", 1))
                          .one();
-    }
-
-    public static void main(String[] args) throws UnknownHostException, InterruptedException {
-        String name = "Margarita";
-        PrintStream printStream = System.out;
-
-        new CallbackBasedCocktailDisplay().display(name, printStream);
     }
 }
