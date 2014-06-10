@@ -1,6 +1,5 @@
 package cocktails.controller;
 
-import cocktails.view.AsyncCocktailPage;
 import cocktails.view.CocktailPage;
 import org.mongodb.Document;
 import org.mongodb.MongoClientOptions;
@@ -9,7 +8,6 @@ import org.mongodb.async.rxjava.MongoClient;
 import org.mongodb.async.rxjava.MongoClients;
 import org.mongodb.async.rxjava.MongoCollection;
 import rx.Observable;
-import rx.functions.Func2;
 
 import java.io.PrintStream;
 import java.net.UnknownHostException;
@@ -33,26 +31,24 @@ public class RxJavaBasedCocktailController {
     }
 
     public void display(final String name, final PrintStream printStream) throws InterruptedException {
-        final CocktailPage page = new CocktailPage(printStream);
-
-        Observable<Document> cocktailObservable = collection.find(new Document("name", name)).one();
-        Observable<CocktailPage> observablePage = cocktailObservable
-                .map(cocktail -> {
-                    page.setCocktail(cocktail);
-                    int cocktailId = page.getCocktail().getInteger("_id");
-                    return Observable.zip(getPrevious(cocktailId), getNext(cocktailId), (previous, next) -> {
-                        page.setPreviousCocktail(previous);
-                        page.setNextCocktail(next);
-                        page.display();
-                        return page;
-                    });
-                })
-                .flatMap(cocktailPageObservable -> cocktailPageObservable)
-                .timeout(5, TimeUnit.SECONDS)
-                .doOnError(page::displayError);
+        CocktailPage page = new CocktailPage(printStream);
 
         try {
-            observablePage.toBlockingObservable().first();
+            collection.find(new Document("name", name)).one()
+                      .map(cocktail -> {
+                          page.setCocktail(cocktail);
+                          int cocktailId = page.getCocktail().getInteger("_id");
+                          return Observable.zip(getPrevious(cocktailId), getNext(cocktailId), (previous, next) -> {
+                              page.setPreviousCocktail(previous);
+                              page.setNextCocktail(next);
+                              page.display();
+                              return page;
+                          });
+                      })
+                      .flatMap(cocktailPageObservable -> cocktailPageObservable)
+                      .timeout(5, TimeUnit.SECONDS)
+                      .doOnError(page::displayError)
+                      .toBlockingObservable().single();
         } finally {
             client.close();
         }
