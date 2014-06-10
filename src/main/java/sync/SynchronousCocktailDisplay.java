@@ -1,5 +1,6 @@
 package sync;
 
+import init.Cocktails;
 import org.mongodb.Document;
 import org.mongodb.MongoClient;
 import org.mongodb.MongoClientOptions;
@@ -22,6 +23,7 @@ public class SynchronousCocktailDisplay {
     public SynchronousCocktailDisplay() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
         collection = client.getDatabase("top_ten").getCollection("cocktails");
+        Cocktails.populate("top_ten", collection.getName());
     }
 
     public void display(final String name, final PrintStream out) {

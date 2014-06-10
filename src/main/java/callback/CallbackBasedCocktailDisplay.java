@@ -1,5 +1,6 @@
 package callback;
 
+import init.Cocktails;
 import org.mongodb.Document;
 import org.mongodb.MongoClientOptions;
 import org.mongodb.MongoClientURI;
@@ -24,6 +25,7 @@ public class CallbackBasedCocktailDisplay {
     public CallbackBasedCocktailDisplay() throws UnknownHostException {
         client = MongoClients.create(new MongoClientURI("mongodb://localhost"), MongoClientOptions.builder().build());
         collection = client.getDatabase("top_ten").getCollection("cocktails");
+        Cocktails.populate("top_ten", collection.getName());
     }
 
     public void display(final String name, final PrintStream printStream) throws InterruptedException {

@@ -8,11 +8,11 @@ import org.mongodb.connection.ServerAddress;
 
 import static java.util.Arrays.asList;
 
-public class PopulateCocktails {
-    public static void main(String[] args) {
+public class Cocktails {
+    public static void populate(final String databaseName, final String collectionName) {
 
         try (MongoClient client = MongoClients.create(new ServerAddress())) {
-            MongoCollection<Document> collection = client.getDatabase("top_ten").getCollection("cocktails");
+            MongoCollection<Document> collection = client.getDatabase(databaseName).getCollection(databaseName);
             collection.tools().drop();
 
             collection.insert(new Document("_id", 1)
