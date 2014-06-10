@@ -12,5 +12,6 @@ repositories {
 dependencies {
     compile "org.mongodb:async-driver:3.0.0-SNAPSHOT"
     compile "org.mongodb:async-rxjava-driver:3.0.0-SNAPSHOT"
-    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile "ch.qos.logback:logback-classic:1.1.1"
+    compile "io.netty:netty-all:4.0.18.Final"
 }
