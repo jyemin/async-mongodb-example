@@ -35,7 +35,7 @@ public class RxJavaBasedCocktailController {
 
         try {
             collection.find(new Document("name", name)).one()
-                      .map(cocktail -> {
+                      .flatMap(cocktail -> {
                           page.setCocktail(cocktail);
                           int cocktailId = page.getCocktail().getInteger("_id");
                           return Observable.zip(getPrevious(cocktailId), getNext(cocktailId), (previous, next) -> {
@@ -45,7 +45,6 @@ public class RxJavaBasedCocktailController {
                               return page;
                           });
                       })
-                      .flatMap(cocktailPageObservable -> cocktailPageObservable)
                       .timeout(5, TimeUnit.SECONDS)
                       .doOnError(page::displayError)
                       .toBlockingObservable().single();
